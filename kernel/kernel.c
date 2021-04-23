@@ -7,4 +7,5 @@ void kernel_main(void)
 	terminal_initialize();
  
 	printf("Hello, welcome to SharodeOS!\n");
+	printf("This is on a newline\n");
 }
