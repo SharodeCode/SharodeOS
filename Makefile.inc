@@ -31,6 +31,10 @@ ${SYSROOTLIBCDIR}/string/memmove.o \
 ${SYSROOTLIBCDIR}/string/memset.o \
 ${SYSROOTLIBCDIR}/string/strlen.o \
 
+STDIO_OBJS=\
+${SYSROOTLIBCDIR}/stdio/printf.o \
+
 LINK_LIST=\
 ${STRING_OBJS} \
 ${KERNEL_OBJS} \
+${STDIO_OBJS} \
