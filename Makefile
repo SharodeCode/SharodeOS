@@ -7,6 +7,7 @@ build: make-directories install-headers
 	# Compile all files in the kernel folder
 	make ${KERNEL_OBJS}
 	make ${STRING_OBJS}
+	make ${STDIO_OBJS}
 
 	${CC} -T ${KERNELDIR}/linker.ld -o SharodeOS.bin -ffreestanding -O2 -nostdlib ${LINK_LIST} -lgcc
 
@@ -19,6 +20,7 @@ make-directories:
 	mkdir -p sysroot/kernel
 	mkdir -p sysroot/libc
 	mkdir -p sysroot/libc/string
+	mkdir -p sysroot/libc/stdio
 	mkdir -p sysroot/include
 
 install-headers:
@@ -35,11 +37,14 @@ run:
 	qemu-system-i386 -cdrom SharodeOS.iso
 
 # Compile all .S files in kernel dircetory (${KERNELDIR}/%.S) into object files in the boot diectory (${BOOTDIR}/$@)
-${SYSROOTKERNELDIR}/%.o: ${KERNELDIR}/%.S
-	${AS} $^ -o $@
+${SYSROOTKERNELDIR}/%.o: ${KERNELDIR}/%.asm
+	nasm -f elf -o $@ $^
 
 ${SYSROOTKERNELDIR}/%.o: ${KERNELDIR}/%.c
 	${CC} -c $^ -o $@ ${CFLAGS}
 
 ${SYSROOTLIBCDIR}/string/%.o: ${LIBCDIR}/string/%.c
+	${CC} -c $^ -o $@ ${CFLAGS}
+
+${SYSROOTLIBCDIR}/stdio/%.o: ${LIBCDIR}/stdio/%.c
 	${CC} -c $^ -o $@ ${CFLAGS}
