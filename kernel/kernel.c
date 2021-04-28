@@ -1,8 +1,11 @@
 #include <tty.h>
 #include <stdio.h>
+#include <gdt.h>
  
 void kernel_main(void) 
 {
+	gdt_initialise();
+	
 	/* Initialize terminal interface */
 	terminal_initialize();
  
