@@ -35,8 +35,8 @@ run:
 	qemu-system-i386 -cdrom SharodeOS.iso
 
 # Compile all .S files in kernel dircetory (${KERNELDIR}/%.S) into object files in the boot diectory (${BOOTDIR}/$@)
-${SYSROOTKERNELDIR}/%.o: ${KERNELDIR}/%.S
-	${AS} $^ -o $@
+${SYSROOTKERNELDIR}/%.o: ${KERNELDIR}/%.asm
+	nasm -f elf -o $@ $^
 
 ${SYSROOTKERNELDIR}/%.o: ${KERNELDIR}/%.c
 	${CC} -c $^ -o $@ ${CFLAGS}
