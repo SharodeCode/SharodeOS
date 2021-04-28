@@ -18,6 +18,7 @@ build: make-directories install-headers
 make-directories:
 	mkdir -p isodir/boot/grub
 	mkdir -p sysroot/kernel
+	mkdir -p sysroot/kernel/gdt
 	mkdir -p sysroot/libc
 	mkdir -p sysroot/libc/string
 	mkdir -p sysroot/libc/stdio
