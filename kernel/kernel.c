@@ -1,6 +1,6 @@
 #include <tty.h>
 #include <stdio.h>
-#include <gdt.h>
+#include "gdt/gdt.h"
  
 void kernel_main(void) 
 {
