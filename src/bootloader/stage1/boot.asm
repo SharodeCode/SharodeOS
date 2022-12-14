@@ -27,7 +27,6 @@ ebr_volume_id:              db 17h, 01h, 19h, 94h
 ebr_volume_label:           db 'SHARODE OS '
 ebr_system_id:              db 'FAT12   '
 
-
 start:
     jmp main
 
