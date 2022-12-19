@@ -1,6 +1,8 @@
 org 0x7C00
 bits 16
 
+%define ENDL 0x0D, 0x0A
+
 jmp short start
 nop
 
@@ -28,30 +30,7 @@ ebr_volume_label:           db 'SHARODE OS '
 ebr_system_id:              db 'FAT12   '
 
 start:
-    jmp main
-
-puts:
-    ;Save registers for later since we will modify
-    push si
-    push ax
-
-.loop:
-    lodsb                   ;Loads next character into AL register
-    or al, al               ;Check end of string (NULL) character
-    jz .done
-
-    mov ah, 0x0e            ;Call bios interrupt to print to screen
-    int 0x10
-
-    jmp .loop
-
-.done:
-    pop ax                  ;Return AX register to original state
-    pop si                  ;Return SI register to original state
-    ret
-
-main:
-    ;Setup data segments
+    ;Setup data segments (can't rely on BIOS setting these)
     mov ax, 0
     mov ds, ax
     mov es, ax
@@ -60,17 +39,51 @@ main:
     mov ss, ax
     mov sp, 0x7C00
 
+    ;Perform a far return to initialise the CS register
+    push es
+    push word .after
+    retf
+
+.after:
+    ;Store drive number to read from later
+    mov [ebr_drive_number], dl
+
+    ; show loading message
     mov si, msg_first_line
     call puts
 
     mov si, msg_second_line
     call puts
 
-.halt:
-    jmp .halt
+    jmp halt
 
-msg_first_line: db 'Wake up, Neo.' , 0x0D, 0x0A, 0
-msg_second_line: db 'Follow the White Rabbit.' , 0x0D, 0x0A, 0
+    cli
+    hlt
+
+puts:
+    push si
+    push ax
+
+.loop:
+    lodsb                   ;Loads next character into AL register
+    or al, al               ;Check end of string (NULL) character
+    jz .done
+
+    mov ah, 0x0e            ;Set BIOS to TTY Write mode when 0x10 interrupt is called
+    int 0x10
+
+    jmp .loop
+
+.done:
+    pop ax
+    pop si
+    ret
+
+halt:
+    jmp halt
+
+msg_first_line: db 'Wake up, Neo.' , ENDL, 0
+msg_second_line: db 'Follow the White Rabbit.' , ENDL, 0
 
 times 510-($-$$) db 0
 dw 0AA55h

@@ -37,14 +37,10 @@ main:
     mov si, msg_first_line
     call puts
 
-    mov si, msg_second_line
-    call puts
-
 .halt:
     jmp .halt
 
-msg_first_line: db 'Wake up, Neo.' , 0x0D, 0x0A, 0
-msg_second_line: db 'Follow the White Rabbit.' , 0x0D, 0x0A, 0
+msg_first_line: db 'This is the kernel' , 0x0D, 0x0A, 0
 
 times 510-($-$$) db 0
 dw 0AA55h
